@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITALY_DRIP | Streetwear</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Arial',sans-serif}
+body{background:#0f0f0f;color:#fff}
+header{padding:25px;text-align:center;border-bottom:1px solid #222}
+header h1{letter-spacing:4px;font-size:32px;font-weight:900;color:#ff0044}
+nav a{color:#fff;margin:0 15px;text-decoration:none;font-size:14px}
+.hero{height:70vh;background:url('https://picsum.photos/1200/800?street') center/cover;
+display:flex;align-items:center;justify-content:center;text-align:center}
+.hero h2{font-size:50px;background:rgba(0,0,0,0.6);padding:20px;letter-spacing:2px}
+.container{max-width:1200px;margin:auto;padding:50px 20px}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px}
+.product{background:#161616;padding:20px;border-radius:10px;transition:0.3s}
+.product:hover{transform:translateY(-5px)}
+.product img{width:100%;border-radius:10px}
+.product h3{margin:15px 0;font-weight:700}
+.price{font-weight:bold;margin-bottom:10px;color:#ff0044}
+select,input[type=number]{width:48%;padding:8px;margin:5px 1% 15px 0;border-radius:5px;border:none}
+button{background:#ff0044;color:#fff;border:none;padding:12px;width:100%;
+cursor:pointer;font-weight:bold;border-radius:5px;transition:0.3s}
+button:hover{opacity:0.8}
+.cart{margin-top:50px;background:#161616;padding:25px;border-radius:10px}
+.cart-item{display:flex;justify-content:space-between;margin-bottom:10px;align-items:center}
+.cart-item span{width:30%}
+.cart-item input{width:50px;text-align:center}
+.remove-btn{background:#222;color:#fff;padding:2px 6px;border-radius:4px;cursor:pointer;margin-left:10px}
+footer{text-align:center;padding:20px;border-top:1px solid #222;margin-top:50px;color:#aaa}
+
+/* Responsive per mobile */
+@media (max-width: 600px){
+  .hero h2{ font-size: 30px; padding: 10px; }
+  .product h3{ font-size: 18px; }
+  select,input[type=number]{width:100%; margin-bottom:10px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>ITALY_DRIP</h1>
+<nav>
+<a href="#">HOME</a>
+<a href="#shop">SHOP</a>
+<a href="#cart">CART</a>
+</nav>
+</header>
+
+<section class="hero">
+<h2>STREET CULTURE ITALIANA</h2>
+</section>
+
+<div class="container" id="shop">
+<h2>DROP ESCLUSIVO</h2><br>
+
+<div class="products">
+<!-- Prodotto 1 -->
+<div class="product">
+<img src="https://picsum.photos/400/400?1" alt="Oversize Tee Black">
+<h3>Oversize Tee Black</h3>
+<p class="price">€29</p>
+<select id="size1">
+<option value="S">S</option>
+<option value="M">M</option>
+<option value="L">L</option>
+<option value="XL">XL</option>
+</select>
+<input type="number" id="qty1" value="1" min="1">
+<button onclick="addToCart('Oversize Tee Black',29,'size1','qty1')">ADD TO CART</button>
+</div>
+
+<!-- Prodotto 2 -->
+<div class="product">
+<img src="https://picsum.photos/400/400?2" alt="Hoodie Street Grey">
+<h3>Hoodie Street Grey</h3>
+<p class="price">€69</p>
+<select id="size2">
+<option value="S">S</option>
+<option value="M">M</option>
+<option value="L">L</option>
+<option value="XL">XL</option>
+</select>
+<input type="number" id="qty2" value="1" min="1">
+<button onclick="addToCart('Hoodie Street Grey',69,'size2','qty2')">ADD TO CART</button>
+</div>
+
+<!-- Prodotto 3 -->
+<div class="product">
+<img src="https://picsum.photos/400/400?3" alt="Cargo Pants">
+<h3>Cargo Pants</h3>
+<p class="price">€79</p>
+<select id="size3">
+<option value="S">S</option>
+<option value="M">M</option>
+<option value="L">L</option>
+<option value="XL">XL</option>
+</select>
+<input type="number" id="qty3" value="1" min="1">
+<button onclick="addToCart('Cargo Pants',79,'size3','qty3')">ADD TO CART</button>
+</div>
+</div>
+
+<div class="cart" id="cart">
+<h2>CART</h2>
+<div id="cartItems"><p>Il carrello è vuoto.</p></div>
+<h3>TOTALE: €<span id="total">0</span></h3>
+</div>
+</div>
+
+<footer>
+<p>© 2026 ITALY_DRIP — STREETWEAR BRAND</p>
+</footer>
+
+<script>
+// Carrello persistente con localStorage
+let cart = []
+
+// Carica il carrello da localStorage all'avvio
+window.onload = function(){
+  const savedCart = localStorage.getItem('cart')
+  if(savedCart){
+    cart = JSON.parse(savedCart)
+  }
+  renderCart()
+}
+
+// Salva il carrello su localStorage
+function saveCart(){
+  localStorage.setItem('cart', JSON.stringify(cart))
+}
+
+// Aggiungi prodotto al carrello
+function addToCart(name, price, sizeId, qtyId){
+  let size = document.getElementById(sizeId).value
+  let qty = Math.max(1, parseInt(document.getElementById(qtyId).value) || 1)
+  cart.push({name, price, qty, size})
+  saveCart()
+  renderCart()
+}
+
+// Render del carrello
+function renderCart(){
+  let div = document.getElementById("cartItems")
+  div.innerHTML = ""
+  let total = 0
+
+  if(cart.length === 0){
+    div.innerHTML = "<p>Il carrello è vuoto.</p>"
+  } else {
+    cart.forEach((item, index) => {
+      total += item.price * item.qty
+      div.innerHTML += `<div class="cart-item">
+        <span>${item.name}</span>
+        <span>${item.size}</span>
+        <input type="number" value="${item.qty}" min="1" onchange="updateQty(${index}, this.value)">
+        <span>€${item.price * item.qty}</span>
+        <span class="remove-btn" onclick="removeItem(${index})">X</span>
+      </div>`
+    })
+  }
+
+  document.getElementById("total").innerText = total
+}
+
+// Aggiorna quantità di un prodotto
+function updateQty(index, newQty){
+  newQty = Math.max(1, parseInt(newQty) || 1)
+  cart[index].qty = newQty
+  saveCart()
+  renderCart()
+}
+
+// Rimuovi prodotto dal carrello
+function removeItem(index){
+  cart.splice(index, 1)
+  saveCart()
+  renderCart()
+}
+</script>
+
+</body>
+</html>
